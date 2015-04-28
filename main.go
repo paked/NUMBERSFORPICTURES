@@ -52,6 +52,7 @@ func main() {
 	api.HandleFunc("/image/new", createImageHandler).Methods("POST")
 	api.HandleFunc("/image/{image_id}/number/new", addNumberHandler).Methods("POST")
 	api.HandleFunc("/image/{image_id}/numbers", getNumbersHandler).Methods("GET")
+	api.HandleFunc("/image/{image_id}", getImageHandler).Methods("GET")
 
 	http.Handle("/", r)
 
@@ -156,4 +157,24 @@ func getNumbersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c.OKWithData("Here are your numbers", numbers)
+}
+
+// getImageHandler is a handler that gives an image
+//   GET /api/image/<IMAGE_ID>
+func getImageHandler(w http.ResponseWriter, r *http.Request) {
+	c := communicator.New(w)
+	imageID := mux.Vars(r)["image_id"]
+
+	if !bson.IsObjectIdHex(imageID) {
+		c.Fail("The image id you provided was not valid.")
+		return
+	}
+
+	var i Image
+	if err := models.RestoreByID(&i, bson.ObjectIdHex(imageID)); err != nil {
+		c.Fail("An image with that ID does not exist")
+		return
+	}
+
+	c.OKWithData("Here is the image", i)
 }
