@@ -12,6 +12,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// Image represents a struct that can be described with numbers
 type Image struct {
 	ID  bson.ObjectId `bson:"_id" json:"id"`
 	URL string        `bson:"url" json:"url"`
@@ -25,6 +26,7 @@ func (i Image) C() string {
 	return "images"
 }
 
+// Number represents a number that can describe an Image
 type Number struct {
 	ID     bson.ObjectId `bson:"_id" json:"id"`
 	For    bson.ObjectId `bson:"for" json:"for"`
@@ -41,10 +43,12 @@ func (n Number) C() string {
 
 func main() {
 	models.Init("localhost", "imagenumberdescriptions")
+
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api").Subrouter()
 
 	r.HandleFunc("/", homeHandler).Methods("GET")
+
 	api.HandleFunc("/image/new", createImageHandler).Methods("POST")
 	api.HandleFunc("/image/{image_id}/number/new", addNumberHandler).Methods("POST")
 
@@ -54,10 +58,14 @@ func main() {
 	fmt.Println(http.ListenAndServe("localhost:8080", nil))
 }
 
+// Serves the home page, a grand spanking "hello!"
+//   GET /
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello!")
 }
 
+// Handler to create a new "image" object and store it in the database
+//   POST /api/image/new?url=<URL>
 func createImageHandler(w http.ResponseWriter, r *http.Request) {
 	c := communicator.New(w)
 	location := r.FormValue("url")
@@ -89,6 +97,8 @@ func createImageHandler(w http.ResponseWriter, r *http.Request) {
 	c.OKWithData("Here is your image", i)
 }
 
+// A handler to add a number to describe an image
+//   POST /image/{image_id}/number/new?number=<A NUMBER>
 func addNumberHandler(w http.ResponseWriter, r *http.Request) {
 	c := communicator.New(w)
 	imageId := mux.Vars(r)["image_id"]
