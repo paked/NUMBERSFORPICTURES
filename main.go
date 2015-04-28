@@ -59,13 +59,13 @@ func main() {
 	fmt.Println(http.ListenAndServe("localhost:8080", nil))
 }
 
-// Serves the home page, a grand spanking "hello!"
+// homeHandler is a handler that serves the home page, a grand spanking "hello!"
 //   GET /
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello!")
 }
 
-// Handler to create a new "image" object and store it in the database
+// createImageHandler is a handler to create a new "image" object and store it in the database
 //   POST /api/image/new?url=<URL>
 func createImageHandler(w http.ResponseWriter, r *http.Request) {
 	c := communicator.New(w)
@@ -98,8 +98,8 @@ func createImageHandler(w http.ResponseWriter, r *http.Request) {
 	c.OKWithData("Here is your image", i)
 }
 
-// A handler to add a number to describe an image
-//   POST /image/{image_id}/number/new?number=<A NUMBER>
+// addNumberHandler is a handler to add a number to describe an image
+//   POST /api/image/{image_id}/number/new?number=<A NUMBER>
 func addNumberHandler(w http.ResponseWriter, r *http.Request) {
 	c := communicator.New(w)
 	imageId := mux.Vars(r)["image_id"]
