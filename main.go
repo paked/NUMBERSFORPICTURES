@@ -64,7 +64,7 @@ func createImageHandler(w http.ResponseWriter, r *http.Request) {
 
 	u, err := url.Parse(location)
 	if err != nil {
-		c.Error("Not a good URL!")
+		c.Fail("Not a good URL!")
 		return
 	}
 
@@ -82,7 +82,7 @@ func createImageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := models.Persist(i); err != nil {
-		c.Fail("An error with the database has occured")
+		c.Error("An error with the database has occured")
 		return
 	}
 
@@ -96,12 +96,12 @@ func addNumberHandler(w http.ResponseWriter, r *http.Request) {
 
 	number, err := strconv.ParseFloat(numberString, 64)
 	if err != nil {
-		c.Error("That is not a valid float!")
+		c.Fail("That is not a valid float!")
 		return
 	}
 
 	if !bson.IsObjectIdHex(imageId) {
-		c.Error("Not valid image id!")
+		c.Fail("Not valid image id!")
 		return
 	}
 
