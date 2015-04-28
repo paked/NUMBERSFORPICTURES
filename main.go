@@ -111,5 +111,10 @@ func addNumberHandler(w http.ResponseWriter, r *http.Request) {
 		Number: number,
 	}
 
+	if err := models.Persist(n); err != nil {
+		c.Error("Something bad happened in the database...")
+		return
+	}
+
 	c.OKWithData("Here is your number", n)
 }
