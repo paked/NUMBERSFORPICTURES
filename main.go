@@ -1,0 +1,102 @@
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"net/url"
+	"strconv"
+
+	"github.com/gorilla/mux"
+	"github.com/paked/gerrycode/communicator"
+	"gopkg.in/mgo.v2/bson"
+)
+
+type Image struct {
+	ID  bson.ObjectId `bson:"_id" json:"id"`
+	URL string        `bson:"url" json:"url"`
+}
+
+func (i Image) BID() bson.ObjectId {
+	return i.ID
+}
+
+func (i Image) C() string {
+	return "images"
+}
+
+type Number struct {
+	ID     bson.ObjectId `bson:"_id" json:"id"`
+	For    bson.ObjectId `bson:"for" json:"for"`
+	Number float64       `bson:"number" json:"number"`
+}
+
+func (n Number) BID() bson.ObjectId {
+	return n.ID
+}
+
+func (n Number) C() string {
+	return "numbers"
+}
+
+func main() {
+	r := mux.NewRouter()
+	api := r.PathPrefix("/api").Subrouter()
+
+	r.HandleFunc("/", homeHandler).Methods("GET")
+	api.HandleFunc("/image/new", createImageHandler).Methods("POST")
+	api.HandleFunc("/image/{image_id}/number/new", addNumberHandler).Methods("POST")
+
+	http.Handle("/", r)
+
+	fmt.Println("Listening on port 8080")
+	fmt.Println(http.ListenAndServe("localhost:8080", nil))
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello!")
+}
+
+func createImageHandler(w http.ResponseWriter, r *http.Request) {
+	c := communicator.New(w)
+	location := r.FormValue("url")
+
+	u, err := url.Parse(location)
+	if err != nil {
+		c.Error("Not a good URL!")
+		return
+	}
+
+	location = u.String()
+
+	i := Image{
+		ID:  bson.NewObjectId(),
+		URL: location,
+	}
+
+	c.OKWithData("Here is your image", i)
+}
+
+func addNumberHandler(w http.ResponseWriter, r *http.Request) {
+	c := communicator.New(w)
+	imageId := mux.Vars(r)["image_id"]
+	numberString := r.FormValue("number")
+
+	number, err := strconv.ParseFloat(numberString, 64)
+	if err != nil {
+		c.Error("That is not a valid float!")
+		return
+	}
+
+	if !bson.IsObjectIdHex(imageId) {
+		c.Error("Not valid image id!")
+		return
+	}
+
+	n := Number{
+		ID:     bson.NewObjectId(),
+		For:    bson.ObjectIdHex(imageId),
+		Number: number,
+	}
+
+	c.OKWithData("Here is your number", n)
+}
