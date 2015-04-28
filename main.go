@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/paked/gerrycode/communicator"
+	"github.com/paked/models"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -39,6 +40,7 @@ func (n Number) C() string {
 }
 
 func main() {
+	models.Init("localhost", "imagenumberdescriptions")
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api").Subrouter()
 
@@ -68,9 +70,20 @@ func createImageHandler(w http.ResponseWriter, r *http.Request) {
 
 	location = u.String()
 
-	i := Image{
+	var i Image
+	if err := models.Restore(&i, bson.M{"url": location}); err == nil {
+		c.Fail("An image with that URL already exists")
+		return
+	}
+
+	i = Image{
 		ID:  bson.NewObjectId(),
 		URL: location,
+	}
+
+	if err := models.Persist(i); err != nil {
+		c.Fail("An error with the database has occured")
+		return
 	}
 
 	c.OKWithData("Here is your image", i)
