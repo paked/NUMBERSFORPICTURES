@@ -51,6 +51,7 @@ func main() {
 
 	api.HandleFunc("/image/new", createImageHandler).Methods("POST")
 	api.HandleFunc("/image/{image_id}/number/new", addNumberHandler).Methods("POST")
+	api.HandleFunc("/image/{image_id}/numbers", getNumbersHandler).Methods("GET")
 
 	http.Handle("/", r)
 
@@ -127,4 +128,32 @@ func addNumberHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c.OKWithData("Here is your number", n)
+}
+
+// getNumbersHandler is a handler to get all the numbers which describe an image
+//   GET /api/image/<IMAGE_ID>/numbers
+func getNumbersHandler(w http.ResponseWriter, r *http.Request) {
+	c := communicator.New(w)
+	imageID := mux.Vars(r)["image_id"]
+
+	if !bson.IsObjectIdHex(imageID) {
+		c.Fail("The image id you provided is not valid!")
+		return
+	}
+
+	var numbers []Number
+	number := Number{}
+
+	iter, err := models.Fetch(number.C(), bson.M{"for": bson.ObjectIdHex(imageID)}, "_id")
+	if err != nil {
+		c.Error("Something went wrong during the fetching!")
+		return
+	}
+
+	for iter.Next(&number) {
+		numbers = append(numbers, number)
+		fmt.Println(number)
+	}
+
+	c.OKWithData("Here are your numbers", numbers)
 }
