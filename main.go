@@ -30,7 +30,7 @@ func (i Image) C() string {
 type Number struct {
 	ID     bson.ObjectId `bson:"_id" json:"id"`
 	For    bson.ObjectId `bson:"for" json:"for"`
-	Number float64       `bson:"number" json:"number"`
+	Number int           `bson:"number" json:"number"`
 }
 
 func (n Number) BID() bson.ObjectId {
@@ -106,7 +106,7 @@ func addNumberHandler(w http.ResponseWriter, r *http.Request) {
 	imageId := mux.Vars(r)["image_id"]
 	numberString := r.FormValue("number")
 
-	number, err := strconv.ParseFloat(numberString, 64)
+	number, err := strconv.Atoi(numberString)
 	if err != nil {
 		c.Fail("That is not a valid float!")
 		return
