@@ -49,10 +49,10 @@ func main() {
 
 	r.HandleFunc("/", homeHandler).Methods("GET")
 
-	api.HandleFunc("/image/new", createImageHandler).Methods("POST")
-	api.HandleFunc("/image/{image_id}/number/new", addNumberHandler).Methods("POST")
-	api.HandleFunc("/image/{image_id}/numbers", getNumbersHandler).Methods("GET")
-	api.HandleFunc("/image/{image_id}", getImageHandler).Methods("GET")
+	api.HandleFunc("/images/new", createImageHandler).Methods("POST")
+	api.HandleFunc("/images/{image_id}/numbers/new", addNumberHandler).Methods("POST")
+	api.HandleFunc("/images/{image_id}/numbers", getNumbersHandler).Methods("GET")
+	api.HandleFunc("/images/{image_id}", getImageHandler).Methods("GET")
 
 	http.Handle("/", r)
 
@@ -67,7 +67,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // createImageHandler is a handler to create a new "image" object and store it in the database
-//   POST /api/image/new?url=<URL>
+//   POST /api/images/new?url=<URL>
 func createImageHandler(w http.ResponseWriter, r *http.Request) {
 	c := communicator.New(w)
 	location := r.FormValue("url")
@@ -100,7 +100,7 @@ func createImageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // addNumberHandler is a handler to add a number to describe an image
-//   POST /api/image/{image_id}/number/new?number=<A NUMBER>
+//   POST /api/images/{image_id}/numbers/new?number=<A NUMBER>
 func addNumberHandler(w http.ResponseWriter, r *http.Request) {
 	c := communicator.New(w)
 	imageId := mux.Vars(r)["image_id"]
@@ -132,7 +132,7 @@ func addNumberHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // getNumbersHandler is a handler to get all the numbers which describe an image
-//   GET /api/image/<IMAGE_ID>/numbers
+//   GET /api/images/<IMAGE_ID>/numbers
 func getNumbersHandler(w http.ResponseWriter, r *http.Request) {
 	c := communicator.New(w)
 	imageID := mux.Vars(r)["image_id"]
@@ -160,7 +160,7 @@ func getNumbersHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // getImageHandler is a handler that gives an image
-//   GET /api/image/<IMAGE_ID>
+//   GET /api/images/<IMAGE_ID>
 func getImageHandler(w http.ResponseWriter, r *http.Request) {
 	c := communicator.New(w)
 	imageID := mux.Vars(r)["image_id"]
