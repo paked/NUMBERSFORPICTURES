@@ -1,3 +1,7 @@
+// main.js - basic image review behaviour
+// zepto: for when you need some API action, but can not be bothered
+// to deal with angular.
+
 var currentImage;
 $(function() {
     loadImage();
@@ -12,5 +16,6 @@ $(function() {
 
     $("#go").click(function() {
         $.post("/api/images/" + currentImage.id + "/numbers/new?number=" + $("#number").val());
+        loadImage();
     });
 });
