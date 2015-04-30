@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -47,23 +48,18 @@ func main() {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api").Subrouter()
 
-	r.HandleFunc("/", homeHandler).Methods("GET")
-
 	api.HandleFunc("/images/new", createImageHandler).Methods("POST")
 	api.HandleFunc("/images/{image_id}/numbers/new", addNumberHandler).Methods("POST")
 	api.HandleFunc("/images/{image_id}/numbers", getNumbersHandler).Methods("GET")
+	api.HandleFunc("/images/random", getRandomImageHandler).Methods("GET")
 	api.HandleFunc("/images/{image_id}", getImageHandler).Methods("GET")
+
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("static/")))
 
 	http.Handle("/", r)
 
 	fmt.Println("Listening on port 8080")
 	fmt.Println(http.ListenAndServe("localhost:8080", nil))
-}
-
-// homeHandler is a handler that serves the home page, a grand spanking "hello!"
-//   GET /
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello!")
 }
 
 // createImageHandler is a handler to create a new "image" object and store it in the database
@@ -177,4 +173,27 @@ func getImageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c.OKWithData("Here is the image", i)
+}
+
+// getRandomImageHandler is a handler that gives a random image
+// GET /api/image/random
+func getRandomImageHandler(w http.ResponseWriter, r *http.Request) {
+	c := communicator.New(w)
+
+	var images []Image
+	image := Image{}
+
+	iter, err := models.Fetch(image.C(), bson.M{}, "_id")
+	if err != nil {
+		c.Error("Something went wrong during the fetching!")
+		return
+	}
+
+	for iter.Next(&image) {
+		images = append(images, image)
+	}
+
+	index := rand.Intn(len(images))
+
+	c.OKWithData("Here is your random image", images[index])
 }
