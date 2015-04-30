@@ -12,3 +12,6 @@ Retrieve an image
 
 ## GET /api/images/<IMAGE_ID>/numbers
 Get an images numbers
+
+## GET /api/images/random
+Get a random image
