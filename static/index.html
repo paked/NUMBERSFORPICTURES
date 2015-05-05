@@ -3,17 +3,67 @@
         <title>
             NUMBERSFORPICTURES
         </title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+        <style>
+            body {
+                padding-top: 70px;
+            }
+            
+            #image {
+                width: 100%;
+            }
+
+            #add-number {
+                margin-top: 10px;
+            }
+        </style>
     </head>
 
     <body>
-        <h1>NUMBERSFORPICTURES</h1>
-        <img id="image" src="http://hd.wallpaperswide.com/thumbs/hack_the_planet-t2.jpg"/>
-        <br>
-        <input id="number" type="text" placeholder="enter a number that describes this image" name="number">
-        <input id="go" type="submit" value="Go"/>
+        <div class="navbar navbar-default navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <button class="navbar-toggle collapsed">
+                    <span class="sr-only">Toggle Navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#/" class="navbar-brand">NUMBERSFORPICTURES</a>
+            </div>
 
-        <h6>I hope you enjoy your browsers default style sheet</h6>
-    
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <img id="image" src="http://hd.wallpaperswide.com/thumbs/hack_the_planet-t2.jpg"/>
+                    <div class="input-group" id="add-number">
+                        <span class="input-group-btn">
+                            <button id="go" class="btn btn-default">Go</button>
+                        </span>
+                        <input id="number" class="form-control" type="text" placeholder="enter a number that describes this image" name="number">
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <p>numbers and stuff</p>
+                </div>
+            </div>
+
+        </div>
         <script type="text/javascript" src="/lib/zepto/zepto.min.js"></script>  
         <script type="text/javascript" src="/main.js"></script>
     </body>
