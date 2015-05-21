@@ -1,16 +1,13 @@
-<html>
+<html ng-app="wnip">
     <head>
         <title>
             NUMBERSFORPICTURES
         </title>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
 
         <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap-theme.css">
 
         <style>
             body {
@@ -46,15 +43,15 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container" ng-controller="ImageCtrl">
             <div class="row">
                 <div class="col-md-5">
-                    <img id="image" src="http://hd.wallpaperswide.com/thumbs/hack_the_planet-t2.jpg"/>
+                    <img id="image" src="{{image.url}}"/>
                     <div class="input-group" id="add-number">
                         <span class="input-group-btn">
-                            <button id="go" class="btn btn-default">Go</button>
+                            <button ng-click="go()" id="go" class="btn btn-default">Go</button>
                         </span>
-                        <input id="number" class="form-control" type="text" placeholder="enter a number that describes this image" name="number">
+                        <input ng-model="number"id="number" class="form-control" type="text" placeholder="enter a number that describes this image" name="number">
                     </div>
                 </div>
 
@@ -64,7 +61,10 @@
             </div>
 
         </div>
+
         <script type="text/javascript" src="/lib/zepto/zepto.min.js"></script>  
+        <script type="text/javascript" src="/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="/lib/angular/angular.js"></script>
         <script type="text/javascript" src="/main.js"></script>
     </body>
 </html>

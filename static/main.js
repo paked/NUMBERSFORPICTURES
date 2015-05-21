@@ -1,21 +1,26 @@
-// main.js - basic image review behaviour
-// zepto: for when you need some API action, but can not be bothered
-// to deal with angular.
+// main.js - cause we all love some good JS meat
+// by Harrison Shoebridge
 
-var currentImage;
-$(function() {
-    loadImage();
-    function loadImage() {
-        $.getJSON("/api/images/random", function(data) {
+var app = angular.module('wnip', []);
+
+app.controller('MainCtrl', function($scope) {
+    $scope.hello = "Hello, world!";
+});
+
+app.controller('ImageCtrl', function($scope, $http) {
+    $scope.image = {};
+    $scope.loadImage = function()  {
+        $http.get("/api/images/random").success(function(data) {
             console.log(data);
-            $("#image").attr("src", data.data.url);
-            $("#input_form").attr("action", "/api/images/" + data.data.id + "/numbers/new");
-            currentImage = data.data;
+            $scope.image = data.data;
+            console.log("loaded");
         });
-    }
+    };
 
-    $("#go").click(function() {
-        $.post("/api/images/" + currentImage.id + "/numbers/new?number=" + $("#number").val());
-        loadImage();
-    });
+    $scope.go = function() {
+        $http.post("/api/images/" + $scope.image.id + "/numbers/new?number=" + $scope.number);
+        console.log("posted");
+    };
+
+    $scope.loadImage();
 });
