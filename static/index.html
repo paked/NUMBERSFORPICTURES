@@ -38,33 +38,18 @@
 
             <div class="collapse navbar-collapse" id="menu-thing">
                 <ul class="nav navbar-nav">
-                    <li><a href="#/">Submit an image</a></li>
+                    <li><a href="#/submit">Submit an image</a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="container" ng-controller="ImageCtrl">
-            <div class="row">
-                <div class="col-md-5">
-                    <img id="image" src="{{image.url}}"/>
-                    <div class="input-group" id="add-number">
-                        <span class="input-group-btn">
-                            <button ng-click="go()" id="go" class="btn btn-default">Go</button>
-                        </span>
-                        <input ng-model="number"id="number" class="form-control" type="text" placeholder="enter a number that describes this image" name="number">
-                    </div>
-                </div>
-
-                <div class="col-md-7">
-                    <p><span ng-repeat="n in numbers">{{n.number}} </span></p>
-                </div>
-            </div>
-
+        <div ng-view>
         </div>
 
         <script type="text/javascript" src="/lib/zepto/zepto.min.js"></script>  
         <script type="text/javascript" src="/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script type="text/javascript" src="/lib/angular/angular.js"></script>
+        <script type="text/javascript" src="/lib/angular-route/angular-route.js"></script>
         <script type="text/javascript" src="/main.js"></script>
     </body>
 </html>

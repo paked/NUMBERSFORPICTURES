@@ -1,7 +1,18 @@
 // main.js - cause we all love some good JS meat
 // by Harrison Shoebridge
 
-var app = angular.module('wnip', []);
+var app = angular.module('wnip', ['ngRoute']);
+
+app.config(function($routeProvider, $locationProvider) {
+    $routeProvider
+    .when('/submit', {
+        templateUrl: 'templates/submit.html',
+        controller: 'SubmitCtrl'
+    }).otherwise({
+        templateUrl: 'templates/view_image.html',
+        controller: 'ImageCtrl',
+    });
+});
 
 app.controller('MainCtrl', function($scope) {
     $scope.hello = "Hello, world!";
