@@ -2,9 +2,9 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="URL">
+                <input type="text" ng-model="url" class="form-control" placeholder="URL">
                 <br>
-                <input type="button" value="Submit" class="btn btn-primary"/>
+                <input type="button" ng-click="submit()" value="Submit" class="btn btn-primary"/>
             </div>
 
         </div>
