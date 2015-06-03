@@ -11,9 +11,12 @@
             </div>
         </div>
         <div class="col-md-7" ng-controller="StatisticsCtrl">
-            <span>Lowest number: {{lowestNumber}}</span><br>
-            <span>Highest number: {{highestNumber}}</span><br>
-            <p><span ng-repeat="n in numbers">{{n.number}} </span></p>
+            <div class="well">
+                <p><strong>Lowest number:</strong> {{lowestNumber}}</p>
+                <p><strong>Highest number:</strong> {{highestNumber}}</p>
+                <p><strong>Number list</strong></p>
+                <p><span ng-repeat="n in numbers">{{n.number}} </span></p>
+            </div>
         </div>
     </div>
 </div>
