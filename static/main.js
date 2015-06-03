@@ -34,9 +34,9 @@ app.controller('SubmitCtrl', function($scope, $http, $location) {
     };
 });
 
-app.controller('ImageCtrl', function($scope, $http) {
+app.controller('ImageCtrl', function($scope, $http, $rootScope) {
     $scope.image = {};
-    $scope.numbers = [];
+    $rootScope.numbers = [];
 
     $scope.loadImage = function()  {
         $http.get("/api/images/random")
@@ -44,11 +44,7 @@ app.controller('ImageCtrl', function($scope, $http) {
                 console.log(data);
                 $scope.image = data.data;
                 console.log("loaded: ", $scope.image.id);
-
-                $http.get("/api/images/" + $scope.image.id + "/numbers")
-                .success(function(d) {
-                    $scope.numbers = d.data;
-                });
+                $scope.$broadcast("SendID", $scope.image.id);
             });
     };
 
@@ -60,4 +56,41 @@ app.controller('ImageCtrl', function($scope, $http) {
     };
 
     $scope.loadImage();
+});
+
+app.controller('StatisticsCtrl', function($scope, $rootScope, $http) {
+    $scope.$on('SendID', function(event, id) {
+        console.log("heep", id);
+
+        $http.get("/api/images/" + id + "/numbers")
+            .success(function(d) {
+                console.log(d, "<-- d");
+                if (d.data === null) {
+                    return;
+                }
+                
+                $scope.compute(d.data);
+            });
+    });
+
+    $scope.compute = function(numbers) {
+        console.log("in compute");
+        function toNumbers(ns) {
+            var i = 0;
+            var res = [];
+            while (i < ns.length) {
+                res.push(ns[i].number);
+                i++;
+            }
+
+            return res;
+        }
+
+        var res = toNumbers(numbers);
+
+        $scope.mostCommon = 0;
+        $scope.highestNumber = Math.max.apply(Math, res);
+        $scope.lowestNumber = Math.min.apply(Math, res);
+        $scope.numbers = numbers;
+    };
 });
